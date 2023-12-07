@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MoviesAPI.DTOs;
+using MoviesAPI.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EmployeeManagement.DTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MoviesAPI.DTOs;
-using MoviesAPI.Models;
 
 namespace MoviesAPI.Controllers
 {
@@ -15,136 +12,56 @@ namespace MoviesAPI.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly EmployeeContext _context;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IPayrollRepository _payrollRepository;
 
-        public EmployeeController(EmployeeContext context)
+        public EmployeeController(IEmployeeRepository employeeRepository)
         {
-            _context = context;
-            context.Database.EnsureCreated();
+            _employeeRepository = employeeRepository;
+            //_payrollRepository = payrollRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeeDto()
         {
-            if (_context.employees == null)
+            var employees = await _employeeRepository.GetEmployeesWithDetailsAsync();
+
+            if (employees == null || !employees.Any())
             {
                 return NotFound();
             }
 
-            var employees = await _context.employees
-                .Include(e => e.EmployeeJobs) // Include EmployeeJobs
-                .Include(e => e.Payrolls)     // Include Payrolls
-                .Include(e => e.EmployeeBenefits) // Include EmployeeBenefits
-                .Select(e => new EmployeeDto
-                {
-                    Id = e.Id,
-                    FirstName = e.FirstName,
-                    LastName = e.LastName,
-                    DateOfBirth = e.DateOfBirth,
-                    Gender = e.Gender,
-                    Age = e.Age,
-                    EmployeeJobs = e.EmployeeJobs.Select(j => new EmployeeJobDto
-                    {
-                        Id = j.Id,
-                        EmployeeID = j.EmployeeID,
-                        JobTitle = j.JobTitle,
-                        Description = j.Description
-                    }).ToList(),
-                    Payrolls = e.Payrolls.Select(p => new PayrollDto
-                    {
-                        PayrollId = p.PayrollId,
-                        EmployeeId = p.EmployeeId,
-                        Salary = p.Salary,
-                        Bonus = p.Bonus,
-                        Deductions = p.Deductions,
-                        PayDate = p.PayDate
-                    }).ToList(),
-                    EmployeeBenefits = e.EmployeeBenefits.Select(b => new EmployeeBenefitsDto
-                    {
-                        BenefitId = b.BenefitId,
-                        EmployeeId = b.EmployeeId,
-                        BenefitType = b.BenefitType,
-                        Details = b.Details,
-                        Cost = b.Cost
-                    }).ToList()
-                }).ToListAsync();
-
-            return employees;
+            return employees.ToList();
         }
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeDto>> GetDirector(Guid id)
+        public async Task<ActionResult<EmployeeDto>> GetEmployee(Guid id)
         {
-            if (_context.employees == null)
+            var employeeDto = await _employeeRepository.GetEmployeeByIdWithDetailsAsync(id);
+
+            if (employeeDto == null)
             {
                 return NotFound();
             }
-
-            var employee = await _context.employees
-                                        .Include(e => e.EmployeeJobs) // Include EmployeeJobs
-                                        .Include(e => e.EmployeeBenefits) // Include EmployeeBenefits
-                                        .Include(e => e.Payrolls) // Include Payrolls
-                                        .SingleOrDefaultAsync(e => e.Id == id); // Find by ID
-
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            var employeeDto = new EmployeeDto
-            {
-                Id = employee.Id,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                DateOfBirth = employee.DateOfBirth,
-                Gender = employee.Gender,
-                Age = employee.Age,
-                EmployeeJobs = employee.EmployeeJobs.Select(j => new EmployeeJobDto
-                {
-                    Id = j.Id,
-                    EmployeeID = j.EmployeeID,
-                    JobTitle = j.JobTitle,
-                    Description = j.Description
-                }).ToList(),
-                EmployeeBenefits = employee.EmployeeBenefits.Select(b => new EmployeeBenefitsDto
-                {
-                    BenefitId = b.BenefitId,
-                    EmployeeId = b.EmployeeId,
-                    BenefitType = b.BenefitType,
-                    Details = b.Details,
-                    Cost = b.Cost
-                }).ToList(),
-                Payrolls = employee.Payrolls.Select(p => new PayrollDto
-                {
-                    PayrollId = p.PayrollId,
-                    EmployeeId = p.EmployeeId,
-                    Salary = p.Salary,
-                    Bonus = p.Bonus,
-                    Deductions = p.Deductions,
-                    PayDate = p.PayDate
-                }).ToList()
-            };
 
             return employeeDto;
         }
-        // PUT: api/Directors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDirector(Guid id, Employee employee)
+        public async Task<IActionResult> PutEmployee(Guid id, EmployeeDto employeeDto)
         {
-            if (id != employee.Id)
+            if (id != employeeDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _employeeRepository.UpdateEmployeeAsync(employeeDto);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DirectorExists(id))
+                if (!_employeeRepository.EmployeeExists(id))
                 {
                     return NotFound();
                 }
@@ -157,49 +74,31 @@ namespace MoviesAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Directors
         [HttpPost]
-        public async Task<ActionResult<EmployeeDto>> PostEmployee(Employee employee)
+        public async Task<ActionResult<EmployeeDto>> PostEmployee(EmployeeDto employeeDto)
         {
-            if (_context.employees == null)
-            {
-                return Problem("Entity set 'MoviesContext.employees' is null.");
-            }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.employees.Add(employee);
-            await _context.SaveChangesAsync();
+            var createdEmployee = await _employeeRepository.AddEmployeeAsync(employeeDto);
 
-            return CreatedAtAction(nameof(GetDirector), new { id = employee.Id }, employee);
+            return CreatedAtAction(nameof(GetEmployee), new { id = createdEmployee.Id }, createdEmployee);
         }
 
-        // DELETE: api/Directors/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDirector(Guid id)
-        {
-            if (_context.employees == null)
-            {
-                return NotFound();
-            }
-            var director = await _context.employees.FindAsync(id);
-            if (director == null)
-            {
-                return NotFound();
-            }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteEmployee(Guid id)
+        //{
+        //    var employee = await _employeeRepository.GetEmployeeByIdAsync(id);
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.employees.Remove(director);
-            await _context.SaveChangesAsync();
+        //    await _employeeRepository.DeleteEmployeeAsync(id);
 
-            return NoContent();
-        }
-
-        private bool DirectorExists(Guid id)
-        {
-            return (_context.employees?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        //    return NoContent();
+        //}
     }
 }
