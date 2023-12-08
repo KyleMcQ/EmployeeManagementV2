@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoviesAPI.DTOs;
-using MoviesAPI.Interfaces;
+using EmployeeManagement.DTOs;
+using EmployeeManagement.Interfaces;
 
-namespace MoviesAPI.Controllers
+namespace EmployeeManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,9 +1,10 @@
-﻿using MoviesAPI.Interfaces;
-using MoviesAPI.Models;
+﻿using EmployeeManagement.Interfaces;
+using EmployeeManagement.Models;
 using Microsoft.EntityFrameworkCore;
-using MoviesAPI.DTOs;
+using EmployeeManagement.DTOs;
+using EmployeeManagement.Context;
 
-namespace MoviesAPI.Repositories
+namespace EmployeeManagement.Repositories
 {
     public class EmployeeJobRepository : IEmployeeJobRepository
     {

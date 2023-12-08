@@ -7,7 +7,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "EmployeeManagementWithService",
+      "defaultValue": "EmployeeManagementDone",
       "metadata": {
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
       }
@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "EmployeeManagement20231207091953",
+      "defaultValue": "EmployeeManagement20231208160515",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

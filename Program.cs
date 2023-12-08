@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
-using MoviesAPI.Interfaces;
-using MoviesAPI.Models;
-using MoviesAPI.Repositories;
+using EmployeeManagement.Interfaces;
+using EmployeeManagement.Repositories;
+using EmployeeManagement.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<EmployeeContext>(opt => opt.UseInMemoryDatabase("MoviesList"));
+builder.Services.AddDbContext<EmployeeContext>(opt => opt.UseInMemoryDatabase("EmployeeString"));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>(); // Make sure you have a PayrollRepository class that implements IPayrollRepository
 builder.Services.AddScoped<IEmployeeJobRepository, EmployeeJobRepository>(); // Make sure you have a PayrollRepository class that implements IPayrollRepository

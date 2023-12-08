@@ -1,7 +1,7 @@
-﻿using MoviesAPI.DTOs;
-using MoviesAPI.Models;
+﻿using EmployeeManagement.DTOs;
+using EmployeeManagement.Models;
 
-namespace MoviesAPI.DTOs
+namespace EmployeeManagement.DTOs
 {
     public class EmployeeDto
     {

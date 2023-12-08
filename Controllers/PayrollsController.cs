@@ -1,7 +1,7 @@
-﻿using MoviesAPI.DTOs;
+﻿using EmployeeManagement.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Interfaces; 
+using EmployeeManagement.Interfaces; 
 
 
 namespace EmployeeManagement.Controllers

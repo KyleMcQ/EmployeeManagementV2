@@ -1,7 +1,7 @@
-﻿using MoviesAPI.DTOs;
+﻿using EmployeeManagement.DTOs;
 
  
-namespace MoviesAPI.Interfaces
+namespace EmployeeManagement.Interfaces
 {
     public interface IEmployeeRepository
     {

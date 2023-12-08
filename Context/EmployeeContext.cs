@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeeManagement.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MoviesAPI.Models
+namespace EmployeeManagement.Context
 {
     public class EmployeeContext : DbContext
     {
@@ -119,13 +120,13 @@ namespace MoviesAPI.Models
                     Bonus = 16000,
                     Deductions = 8000,
                     PayDate = new DateTime(2021, 1, 15)
-                }               
+                }
                 );
             modelBuilder.Entity<EmployeeBenefits>().HasData(
             new EmployeeBenefits
             {
                 BenefitId = Guid.Parse("a1b2c3d4-e5f6-7890-abcd-1234567890ab"),
-                EmployeeId = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"), 
+                EmployeeId = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"),
                 BenefitType = "Health Insurance",
                 Details = "Full coverage medical and dental insurance",
                 Cost = 300.00M
@@ -141,7 +142,7 @@ namespace MoviesAPI.Models
     new EmployeeBenefits
     {
         BenefitId = Guid.Parse("c3d4e5f6-a789-0123-cdef-3456789012ab"),
-        EmployeeId = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"), 
+        EmployeeId = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"),
         BenefitType = "Life Insurance",
         Details = "Term life insurance policy",
         Cost = 100.00M
@@ -149,36 +150,36 @@ namespace MoviesAPI.Models
 
             );
 
-        modelBuilder.Entity<EmployeeJob>().HasData(
-                new EmployeeJob
-                {
-                    Id = Guid.Parse("5b1c2b4d-48c7-402a-80c3-cc796ad49c6b"),
-                    EmployeeID = Guid.Parse("5b3621c0-7b12-4e80-9c8b-3398cba7ee05"),
-                    JobTitle = "Marketing Coordinator",
-                    Description = "Develops and implements marketing strategies"
-                },
-                new EmployeeJob
-                {
-                    Id = Guid.Parse("d8663e5e-7494-4f81-8739-6e0de1bea7ee"),
-                    EmployeeID = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"),
-                    JobTitle = "Software Developer",
-                    Description = "Designs and maintains software applications"
-                },
-                new EmployeeJob
-                {
-                    Id = Guid.Parse("d173e20d-159e-4127-9ce9-b0ac2564ad97"),
-                    EmployeeID = Guid.Parse("da2fd609-d754-4feb-8acd-c4f9ff13ba96"),
-                    JobTitle = "Human Resources Manager",
-                    Description = "Manages employee relations and recruitment processes"
-                },
-                new EmployeeJob
-                {
-                    Id = Guid.Parse("40ff5488-fdab-45b5-bc3a-14302d59869a"),
-                    EmployeeID = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"),
-                    JobTitle = "Accountant",
-                    Description = "Oversees financial records and budgeting processes"
-                }
-                );
+            modelBuilder.Entity<EmployeeJob>().HasData(
+                    new EmployeeJob
+                    {
+                        Id = Guid.Parse("5b1c2b4d-48c7-402a-80c3-cc796ad49c6b"),
+                        EmployeeID = Guid.Parse("5b3621c0-7b12-4e80-9c8b-3398cba7ee05"),
+                        JobTitle = "Marketing Coordinator",
+                        Description = "Develops and implements marketing strategies"
+                    },
+                    new EmployeeJob
+                    {
+                        Id = Guid.Parse("d8663e5e-7494-4f81-8739-6e0de1bea7ee"),
+                        EmployeeID = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"),
+                        JobTitle = "Software Developer",
+                        Description = "Designs and maintains software applications"
+                    },
+                    new EmployeeJob
+                    {
+                        Id = Guid.Parse("d173e20d-159e-4127-9ce9-b0ac2564ad97"),
+                        EmployeeID = Guid.Parse("da2fd609-d754-4feb-8acd-c4f9ff13ba96"),
+                        JobTitle = "Human Resources Manager",
+                        Description = "Manages employee relations and recruitment processes"
+                    },
+                    new EmployeeJob
+                    {
+                        Id = Guid.Parse("40ff5488-fdab-45b5-bc3a-14302d59869a"),
+                        EmployeeID = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"),
+                        JobTitle = "Accountant",
+                        Description = "Oversees financial records and budgeting processes"
+                    }
+                    );
 
 
             base.OnModelCreating(modelBuilder);

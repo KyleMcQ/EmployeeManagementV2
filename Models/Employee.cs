@@ -1,6 +1,6 @@
-﻿using MoviesAPI.DTOs;
+﻿using EmployeeManagement.DTOs;
 using System.ComponentModel.DataAnnotations;
-namespace MoviesAPI.Models
+namespace EmployeeManagement.Models
 {
     public class Employee
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MoviesAPI.Models
+namespace EmployeeManagement.Models
 {
     public class EmployeeBenefits
     {

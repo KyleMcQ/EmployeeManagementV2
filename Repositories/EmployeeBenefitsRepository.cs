@@ -1,13 +1,10 @@
-﻿using MoviesAPI.Interfaces;
-using MoviesAPI.Models; // Replace with your actual namespace
+﻿using EmployeeManagement.Interfaces;
+using EmployeeManagement.Models; // Replace with your actual namespace
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MoviesAPI.DTOs;
+using EmployeeManagement.DTOs;
+using EmployeeManagement.Context;
 
-namespace MoviesAPI.Repositories
+namespace EmployeeManagement.Repositories
 {
     public class EmployeeBenefitsRepository : IEmployeeBenefitsRepository
     {

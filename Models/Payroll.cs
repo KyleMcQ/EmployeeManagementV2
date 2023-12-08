@@ -1,4 +1,4 @@
-﻿namespace MoviesAPI.Models
+﻿namespace EmployeeManagement.Models
 {
     public class Payroll
     {
