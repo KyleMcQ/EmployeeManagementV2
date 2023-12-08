@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MoviesAPI.Interfaces; // Import the namespace where IPayrollRepository is located
 using MoviesAPI.Models;
 
 namespace EmployeeManagement.Controllers
@@ -13,44 +12,38 @@ namespace EmployeeManagement.Controllers
     [ApiController]
     public class PayrollsController : ControllerBase
     {
-        private readonly EmployeeContext _context;
+        private readonly IPayrollRepository _payrollRepository;
 
-        public PayrollsController(EmployeeContext context)
+        public PayrollsController(IPayrollRepository payrollRepository)
         {
-            _context = context;
+            _payrollRepository = payrollRepository;
         }
 
         // GET: api/Payrolls
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Payroll>>> GetPayrolls()
         {
-          if (_context.Payrolls == null)
-          {
-              return NotFound();
-          }
-            return await _context.Payrolls.ToListAsync();
+            var payrolls = await _payrollRepository.GetAllPayrollsAsync();
+            if (payrolls == null)
+            {
+                return NotFound();
+            }
+            return Ok(payrolls);
         }
 
         // GET: api/Payrolls/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Payroll>> GetPayroll(Guid id)
         {
-          if (_context.Payrolls == null)
-          {
-              return NotFound();
-          }
-            var payroll = await _context.Payrolls.FindAsync(id);
-
+            var payroll = await _payrollRepository.GetPayrollByIdAsync(id);
             if (payroll == null)
             {
                 return NotFound();
             }
-
-            return payroll;
+            return Ok(payroll);
         }
 
         // PUT: api/Payrolls/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPayroll(Guid id, Payroll payroll)
         {
@@ -59,15 +52,13 @@ namespace EmployeeManagement.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(payroll).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _payrollRepository.UpdatePayrollAsync(payroll);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PayrollExists(id))
+                if (!await PayrollExists(id))
                 {
                     return NotFound();
                 }
@@ -81,17 +72,10 @@ namespace EmployeeManagement.Controllers
         }
 
         // POST: api/Payrolls
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Payroll>> PostPayroll(Payroll payroll)
         {
-          if (_context.Payrolls == null)
-          {
-              return Problem("Entity set 'EmployeeContext.Payrolls'  is null.");
-          }
-            _context.Payrolls.Add(payroll);
-            await _context.SaveChangesAsync();
-
+            await _payrollRepository.AddPayrollAsync(payroll);
             return CreatedAtAction("GetPayroll", new { id = payroll.PayrollId }, payroll);
         }
 
@@ -99,25 +83,19 @@ namespace EmployeeManagement.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePayroll(Guid id)
         {
-            if (_context.Payrolls == null)
-            {
-                return NotFound();
-            }
-            var payroll = await _context.Payrolls.FindAsync(id);
+            var payroll = await _payrollRepository.GetPayrollByIdAsync(id);
             if (payroll == null)
             {
                 return NotFound();
             }
 
-            _context.Payrolls.Remove(payroll);
-            await _context.SaveChangesAsync();
-
+            await _payrollRepository.DeletePayrollAsync(id);
             return NoContent();
         }
 
-        private bool PayrollExists(Guid id)
+        private async Task<bool> PayrollExists(Guid id)
         {
-            return (_context.Payrolls?.Any(e => e.PayrollId == id)).GetValueOrDefault();
+            return await _payrollRepository.GetPayrollByIdAsync(id) != null;
         }
     }
 }

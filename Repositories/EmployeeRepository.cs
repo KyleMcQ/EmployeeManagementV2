@@ -40,15 +40,34 @@ namespace MoviesAPI.Repositories
                 Age = employee.Age,
                 EmployeeJobs = employee.EmployeeJobs.Select(job => new EmployeeJobDto
                 {
+                    Id = job.Id,
+                    JobTitle = job.JobTitle,
+                    Description = job.Description,
+                    EmployeeID = job.EmployeeID
+
+
                     // Map the properties of EmployeeJob to EmployeeJobDto
                 }).ToList(),
                 Payrolls = employee.Payrolls.Select(payroll => new PayrollDto
                 {
+                    PayrollId = payroll.PayrollId,
+                    EmployeeId = payroll.EmployeeId,
+                    Salary = payroll.Salary,
+                    Bonus = payroll.Bonus,
+                    Deductions = payroll.Deductions,
+                    PayDate = payroll.PayDate
+
+
                     // Map the properties of Payroll to PayrollDto
                 }).ToList(),
                 EmployeeBenefits = employee.EmployeeBenefits.Select(benefit => new EmployeeBenefitsDto
                 {
-                    // Map the properties of EmployeeBenefits to EmployeeBenefitsDto
+                    BenefitId = benefit.BenefitId,
+                    EmployeeId = benefit.EmployeeId,
+                    BenefitType = benefit.BenefitType,
+                    Details = benefit.Details,
+                    Cost = benefit.Cost,
+
                 }).ToList()
             };
         }
@@ -71,16 +90,35 @@ namespace MoviesAPI.Repositories
                 Age = employee.Age,
                 EmployeeJobs = employee.EmployeeJobs.Select(job => new EmployeeJobDto
                 {
+                    Id = job.Id,
+                    JobTitle = job.JobTitle,
+                    Description = job.Description,
+                    EmployeeID = job.EmployeeID
+
+
                     // Map the properties of EmployeeJob to EmployeeJobDto
                 }).ToList(),
                 Payrolls = employee.Payrolls.Select(payroll => new PayrollDto
                 {
+                    PayrollId = payroll.PayrollId,
+                    EmployeeId = payroll.EmployeeId,
+                    Salary = payroll.Salary,
+                    Bonus = payroll.Bonus,
+                    Deductions = payroll.Deductions,
+                    PayDate = payroll.PayDate
+
+
                     // Map the properties of Payroll to PayrollDto
                 }).ToList(),
                 EmployeeBenefits = employee.EmployeeBenefits.Select(benefit => new EmployeeBenefitsDto
                 {
-                    // Map the properties of EmployeeBenefits to EmployeeBenefitsDto
-                }).ToList()
+                    BenefitId = benefit.BenefitId,
+                    EmployeeId = benefit.EmployeeId,
+                    BenefitType = benefit.BenefitType,
+                    Details = benefit.Details,
+                    Cost = benefit.Cost,
+                    
+    }).ToList()
             });
         }
 
@@ -104,6 +142,7 @@ namespace MoviesAPI.Repositories
             return employeeDto;
         }
 
+        //ONLY UPDATES EMPLOYEE TABLE
         public async Task UpdateEmployeeAsync(EmployeeDto employeeDto)
         {
             var employee = await _context.employees.FindAsync(employeeDto.Id);

@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using MoviesAPI.DTOs;
 using MoviesAPI.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MoviesAPI.Controllers
 {
@@ -13,12 +10,10 @@ namespace MoviesAPI.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IPayrollRepository _payrollRepository;
 
         public EmployeeController(IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
-            //_payrollRepository = payrollRepository;
         }
 
         [HttpGet]
@@ -87,18 +82,18 @@ namespace MoviesAPI.Controllers
             return CreatedAtAction(nameof(GetEmployee), new { id = createdEmployee.Id }, createdEmployee);
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteEmployee(Guid id)
-        //{
-        //    var employee = await _employeeRepository.GetEmployeeByIdAsync(id);
-        //    if (employee == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployee(Guid id)
+        {
+            var employee = await _employeeRepository.GetEmployeeByIdWithDetailsAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
 
-        //    await _employeeRepository.DeleteEmployeeAsync(id);
+            await _employeeRepository.DeleteEmployeeAsync(id);
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
     }
 }
