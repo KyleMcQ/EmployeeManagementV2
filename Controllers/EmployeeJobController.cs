@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Models;
 using MoviesAPI.DTOs;
+using MoviesAPI.Interfaces; // Import the namespace of the IEmployeeJobRepository
 
 namespace MoviesAPI.Controllers
 {
@@ -14,70 +12,53 @@ namespace MoviesAPI.Controllers
     [ApiController]
     public class EmployeeJobController : ControllerBase
     {
-        private readonly EmployeeContext _context;
+        private readonly IEmployeeJobRepository _employeeJobRepository;
 
-        public EmployeeJobController(EmployeeContext context)
+        public EmployeeJobController(IEmployeeJobRepository employeeJobRepository)
         {
-            _context = context;
-            context.Database.EnsureCreated();
+            _employeeJobRepository = employeeJobRepository;
         }
 
-        // GET: api/Movies
+        // GET: api/EmployeeJob
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeJobDto>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<EmployeeJobDto>>> GetEmployeeJobs()
         {
-          if (_context.employeeJobs == null)
-          {
-              return NotFound();
-          }
-            return await _context.employeeJobs.Select(t =>
-                new EmployeeJobDto()
-                {
-                    Id = t.Id,
-                    JobTitle = t.JobTitle,
-                    Description = t.Description,
-                    EmployeeID = t.EmployeeID
-                }
-             ).ToListAsync();
-        }
-
-        // GET: api/Movies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Models.EmployeeJob>> GetMovie(Guid id)
-        {
-          if (_context.employeeJobs == null)
-          {
-              return NotFound();
-          }
-            var movie = await _context.employeeJobs.FindAsync(id);
-
-            if (movie == null)
+            var employeeJobs = await _employeeJobRepository.GetAllEmployeeJobsAsync();
+            if (employeeJobs == null)
             {
                 return NotFound();
             }
-
-            return movie;
+            return Ok(employeeJobs);
         }
 
-        // PUT: api/Movies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(Guid id, Models.EmployeeJob movie)
+        // GET: api/EmployeeJob/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmployeeJobDto>> GetEmployeeJob(Guid id)
         {
-            if (id != movie.Id)
+            var employeeJob = await _employeeJobRepository.GetEmployeeJobByIdAsync(id);
+            if (employeeJob == null)
+            {
+                return NotFound();
+            }
+            return Ok(employeeJob);
+        }
+
+        // PUT: api/EmployeeJob/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEmployeeJob(Guid id, EmployeeJobDto employeeJobDto)
+        {
+            if (id != employeeJobDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _employeeJobRepository.UpdateEmployeeJobAsync(employeeJobDto);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MovieExists(id))
+                if (!await EmployeeJobExists(id))
                 {
                     return NotFound();
                 }
@@ -90,44 +71,32 @@ namespace MoviesAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Movies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/EmployeeJob
         [HttpPost]
-        public async Task<ActionResult<Models.EmployeeJob>> PostMovie(Models.EmployeeJob movie)
+        public async Task<ActionResult<EmployeeJobDto>> PostEmployeeJob(EmployeeJobDto employeeJobDto)
         {
-          if (_context.employeeJobs == null)
-          {
-              return Problem("Entity set 'MoviesContext.Movies'  is null.");
-          }
-            _context.employeeJobs.Add(movie);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
+            await _employeeJobRepository.AddEmployeeJobAsync(employeeJobDto);
+            return CreatedAtAction(nameof(GetEmployeeJob), new { id = employeeJobDto.Id }, employeeJobDto);
         }
 
-        // DELETE: api/Movies/5
+        // DELETE: api/EmployeeJob/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovie(Guid id)
+        public async Task<IActionResult> DeleteEmployeeJob(Guid id)
         {
-            if (_context.employeeJobs == null)
-            {
-                return NotFound();
-            }
-            var movie = await _context.employeeJobs.FindAsync(id);
-            if (movie == null)
+            var employeeJob = await _employeeJobRepository.GetEmployeeJobByIdAsync(id);
+            if (employeeJob == null)
             {
                 return NotFound();
             }
 
-            _context.employeeJobs.Remove(movie);
-            await _context.SaveChangesAsync();
-
+            await _employeeJobRepository.DeleteEmployeeJobAsync(id);
             return NoContent();
         }
 
-        private bool MovieExists(Guid id)
+        private async Task<bool> EmployeeJobExists(Guid id)
         {
-            return (_context.employeeJobs?.Any(e => e.Id == id)).GetValueOrDefault();
+            var employeeJob = await _employeeJobRepository.GetEmployeeJobByIdAsync(id);
+            return employeeJob != null;
         }
     }
 }

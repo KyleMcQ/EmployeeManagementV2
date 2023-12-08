@@ -1,4 +1,5 @@
-﻿using MoviesAPI.Models; // Assuming your models are in this namespace
+﻿using MoviesAPI.DTOs;
+using MoviesAPI.Models; // Assuming your models are in this namespace
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,11 +7,13 @@ namespace MoviesAPI.Interfaces
 {
     public interface IPayrollRepository
     {
-        Task<IEnumerable<Payroll>> GetAllPayrollsAsync();
-        Task<Payroll> GetPayrollByIdAsync(Guid id);
-        Task AddPayrollAsync(Payroll payroll);
-        Task UpdatePayrollAsync(Payroll payroll);
+        Task<IEnumerable<PayrollDto>> GetAllPayrollsAsync();
+        Task<PayrollDto> GetPayrollByIdAsync(Guid id);
+        Task AddPayrollAsync(PayrollDto payrollDto);
+        Task UpdatePayrollAsync(PayrollDto payrollDto);
         Task DeletePayrollAsync(Guid id);
+
+        bool PayrollExists(Guid id);
 
     }
 }

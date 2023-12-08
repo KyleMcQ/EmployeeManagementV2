@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MoviesAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Interfaces; // Import the namespace where IPayrollRepository is located
-using MoviesAPI.Models;
+using MoviesAPI.Models; // Contains PayrollDto
 
 namespace EmployeeManagement.Controllers
 {
@@ -21,7 +22,7 @@ namespace EmployeeManagement.Controllers
 
         // GET: api/Payrolls
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Payroll>>> GetPayrolls()
+        public async Task<ActionResult<IEnumerable<PayrollDto>>> GetPayrolls()
         {
             var payrolls = await _payrollRepository.GetAllPayrollsAsync();
             if (payrolls == null)
@@ -33,7 +34,7 @@ namespace EmployeeManagement.Controllers
 
         // GET: api/Payrolls/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Payroll>> GetPayroll(Guid id)
+        public async Task<ActionResult<PayrollDto>> GetPayroll(Guid id)
         {
             var payroll = await _payrollRepository.GetPayrollByIdAsync(id);
             if (payroll == null)
@@ -45,20 +46,20 @@ namespace EmployeeManagement.Controllers
 
         // PUT: api/Payrolls/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayroll(Guid id, Payroll payroll)
+        public async Task<IActionResult> PutPayroll(Guid id, PayrollDto payrollDto)
         {
-            if (id != payroll.PayrollId)
+            if (id != payrollDto.PayrollId)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _payrollRepository.UpdatePayrollAsync(payroll);
+                await _payrollRepository.UpdatePayrollAsync(payrollDto);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await PayrollExists(id))
+                if (!_payrollRepository.PayrollExists(id))
                 {
                     return NotFound();
                 }
@@ -73,18 +74,17 @@ namespace EmployeeManagement.Controllers
 
         // POST: api/Payrolls
         [HttpPost]
-        public async Task<ActionResult<Payroll>> PostPayroll(Payroll payroll)
+        public async Task<ActionResult<PayrollDto>> PostPayroll(PayrollDto payrollDto)
         {
-            await _payrollRepository.AddPayrollAsync(payroll);
-            return CreatedAtAction("GetPayroll", new { id = payroll.PayrollId }, payroll);
+            await _payrollRepository.AddPayrollAsync(payrollDto);
+            return CreatedAtAction("GetPayroll", new { id = payrollDto.PayrollId }, payrollDto);
         }
 
         // DELETE: api/Payrolls/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePayroll(Guid id)
         {
-            var payroll = await _payrollRepository.GetPayrollByIdAsync(id);
-            if (payroll == null)
+            if (!await PayrollExists(id))
             {
                 return NotFound();
             }

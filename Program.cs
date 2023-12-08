@@ -12,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<EmployeeContext>(opt => opt.UseInMemoryDatabase("MoviesList"));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>(); // Make sure you have a PayrollRepository class that implements IPayrollRepository
+builder.Services.AddScoped<IEmployeeJobRepository, EmployeeJobRepository>(); // Make sure you have a PayrollRepository class that implements IPayrollRepository
+builder.Services.AddScoped<IEmployeeBenefitsRepository, EmployeeBenefitsRepository>(); // Make sure you have a PayrollRepository class that implements IPayrollRepository
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
