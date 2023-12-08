@@ -1,8 +1,5 @@
 ﻿using MoviesAPI.DTOs;
-using MoviesAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace MoviesAPI.Interfaces
 {

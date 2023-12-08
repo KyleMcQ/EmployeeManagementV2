@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Repositories;
 
 namespace MoviesAPI.Models
 {
@@ -126,7 +125,7 @@ namespace MoviesAPI.Models
             new EmployeeBenefits
             {
                 BenefitId = Guid.Parse("a1b2c3d4-e5f6-7890-abcd-1234567890ab"),
-                EmployeeId = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"), // Replace with actual EmployeeId
+                EmployeeId = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"), 
                 BenefitType = "Health Insurance",
                 Details = "Full coverage medical and dental insurance",
                 Cost = 300.00M
@@ -134,7 +133,7 @@ namespace MoviesAPI.Models
     new EmployeeBenefits
     {
         BenefitId = Guid.Parse("b2c3d4e5-f6a7-8901-bcde-2345678901ab"),
-        EmployeeId = Guid.Parse("da2fd609-d754-4feb-8acd-c4f9ff13ba96"), // Replace with actual EmployeeId
+        EmployeeId = Guid.Parse("da2fd609-d754-4feb-8acd-c4f9ff13ba96"),
         BenefitType = "Retirement Plan",
         Details = "Company matched 401(k) retirement plan",
         Cost = 200.00M
@@ -142,7 +141,7 @@ namespace MoviesAPI.Models
     new EmployeeBenefits
     {
         BenefitId = Guid.Parse("c3d4e5f6-a789-0123-cdef-3456789012ab"),
-        EmployeeId = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"), // Replace with actual EmployeeId
+        EmployeeId = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"), 
         BenefitType = "Life Insurance",
         Details = "Term life insurance policy",
         Cost = 100.00M

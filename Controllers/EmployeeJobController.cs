@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAPI.DTOs;
-using MoviesAPI.Interfaces; // Import the namespace of the IEmployeeJobRepository
+using MoviesAPI.Interfaces; 
 
 namespace MoviesAPI.Controllers
 {

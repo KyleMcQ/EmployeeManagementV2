@@ -1,10 +1,6 @@
 ﻿using MoviesAPI.Interfaces;
-using System.Threading.Tasks;
-using MoviesAPI.Models; // Assuming your models are in this namespace
-using System.Collections.Generic;
+using MoviesAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using MoviesAPI.DTOs;
 
 namespace MoviesAPI.Repositories
@@ -29,8 +25,6 @@ namespace MoviesAPI.Repositories
                 Bonus = p.Bonus,
                 Deductions = p.Deductions,
                 PayDate = p.PayDate
-
-                // Map other properties from Payroll to PayrollDto
             }).ToList();
         }
 
@@ -48,7 +42,6 @@ namespace MoviesAPI.Repositories
                 Deductions = payroll.Deductions,
                 PayDate = payroll.PayDate
 
-                // Map other properties from Payroll to PayrollDto
             };
         }
 
@@ -56,9 +49,13 @@ namespace MoviesAPI.Repositories
         {
             var payroll = new Payroll
             {
-                // Map properties from PayrollDto to Payroll
                 PayrollId = payrollDto.PayrollId,
-                // ...
+                EmployeeId = payrollDto.EmployeeId,
+                Salary = payrollDto.Salary,
+                Bonus = payrollDto.Bonus,
+                Deductions = payrollDto.Deductions,
+                PayDate = payrollDto.PayDate
+
             };
             await _context.Payrolls.AddAsync(payroll);
             await _context.SaveChangesAsync();
@@ -69,7 +66,6 @@ namespace MoviesAPI.Repositories
             var payroll = await _context.Payrolls.FindAsync(payrollDto.PayrollId);
             if (payroll == null) return;
 
-            // Map properties from PayrollDto to Payroll
             payroll.PayrollId = payrollDto.PayrollId;
             payroll.EmployeeId = payrollDto.EmployeeId;
             payroll.Salary = payrollDto.Salary;

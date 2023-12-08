@@ -1,73 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Interfaces; 
+using MoviesAPI.DTOs;
+using Microsoft.EntityFrameworkCore; 
 
-namespace EmployeeManagement.Controllers
+namespace MoviesAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeBenefitsController : ControllerBase
     {
-        private readonly EmployeeContext _context;
+        private readonly IEmployeeBenefitsRepository _employeeBenefitsRepository;
 
-        public EmployeeBenefitsController(EmployeeContext context)
+        public EmployeeBenefitsController(IEmployeeBenefitsRepository employeeBenefitsRepository)
         {
-            _context = context;
+            _employeeBenefitsRepository = employeeBenefitsRepository;
         }
 
         // GET: api/EmployeeBenefits
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeBenefits>>> GetEmployeeBenefits()
+        public async Task<ActionResult<IEnumerable<EmployeeBenefitsDto>>> GetEmployeeBenefits()
         {
-          if (_context.EmployeeBenefits == null)
-          {
-              return NotFound();
-          }
-            return await _context.EmployeeBenefits.ToListAsync();
-        }
-
-        // GET: api/EmployeeBenefits/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeBenefits>> GetEmployeeBenefits(Guid id)
-        {
-          if (_context.EmployeeBenefits == null)
-          {
-              return NotFound();
-          }
-            var employeeBenefits = await _context.EmployeeBenefits.FindAsync(id);
-
+            var employeeBenefits = await _employeeBenefitsRepository.GetAllEmployeeBenefitsAsync();
             if (employeeBenefits == null)
             {
                 return NotFound();
             }
+            return Ok(employeeBenefits);
+        }
 
-            return employeeBenefits;
+        // GET: api/EmployeeBenefits/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmployeeBenefitsDto>> GetEmployeeBenefits(Guid id)
+        {
+            var employeeBenefits = await _employeeBenefitsRepository.GetEmployeeBenefitsByIdAsync(id);
+            if (employeeBenefits == null)
+            {
+                return NotFound();
+            }
+            return Ok(employeeBenefits);
         }
 
         // PUT: api/EmployeeBenefits/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployeeBenefits(Guid id, EmployeeBenefits employeeBenefits)
+        public async Task<IActionResult> PutEmployeeBenefits(Guid id, EmployeeBenefitsDto employeeBenefitsDto)
         {
-            if (id != employeeBenefits.BenefitId)
+            if (id != employeeBenefitsDto.BenefitId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employeeBenefits).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _employeeBenefitsRepository.UpdateEmployeeBenefitsAsync(employeeBenefitsDto);
+                return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployeeBenefitsExists(id))
+                if (!await EmployeeBenefitsExists(id))
                 {
                     return NotFound();
                 }
@@ -76,48 +65,33 @@ namespace EmployeeManagement.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/EmployeeBenefits
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<EmployeeBenefits>> PostEmployeeBenefits(EmployeeBenefits employeeBenefits)
+        public async Task<ActionResult<EmployeeBenefitsDto>> PostEmployeeBenefits(EmployeeBenefitsDto employeeBenefitsDto)
         {
-          if (_context.EmployeeBenefits == null)
-          {
-              return Problem("Entity set 'EmployeeContext.EmployeeBenefits'  is null.");
-          }
-            _context.EmployeeBenefits.Add(employeeBenefits);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetEmployeeBenefits", new { id = employeeBenefits.BenefitId }, employeeBenefits);
+            await _employeeBenefitsRepository.AddEmployeeBenefitsAsync(employeeBenefitsDto);
+            return CreatedAtAction("GetEmployeeBenefits", new { id = employeeBenefitsDto.BenefitId }, employeeBenefitsDto);
         }
 
         // DELETE: api/EmployeeBenefits/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployeeBenefits(Guid id)
         {
-            if (_context.EmployeeBenefits == null)
-            {
-                return NotFound();
-            }
-            var employeeBenefits = await _context.EmployeeBenefits.FindAsync(id);
-            if (employeeBenefits == null)
+            if (!await EmployeeBenefitsExists(id))
             {
                 return NotFound();
             }
 
-            _context.EmployeeBenefits.Remove(employeeBenefits);
-            await _context.SaveChangesAsync();
-
+            await _employeeBenefitsRepository.DeleteEmployeeBenefitsAsync(id);
             return NoContent();
         }
 
-        private bool EmployeeBenefitsExists(Guid id)
+        private async Task<bool> EmployeeBenefitsExists(Guid id)
         {
-            return (_context.EmployeeBenefits?.Any(e => e.BenefitId == id)).GetValueOrDefault();
+            var employeeBenefits = await _employeeBenefitsRepository.GetEmployeeBenefitsByIdAsync(id);
+            return employeeBenefits != null;
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using EmployeeManagement.DTOs; // Make sure this is the correct namespace for your DTOs
+﻿using MoviesAPI.DTOs; 
 using MoviesAPI.Models;
 using MoviesAPI.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using MoviesAPI.DTOs;
 
 namespace MoviesAPI.Repositories
 {
@@ -42,7 +41,6 @@ namespace MoviesAPI.Repositories
                     EmployeeID = job.EmployeeID
 
 
-                    // Map the properties of EmployeeJob to EmployeeJobDto
                 }).ToList(),
                 Payrolls = employee.Payrolls.Select(payroll => new PayrollDto
                 {
@@ -54,7 +52,6 @@ namespace MoviesAPI.Repositories
                     PayDate = payroll.PayDate
 
 
-                    // Map the properties of Payroll to PayrollDto
                 }).ToList(),
                 EmployeeBenefits = employee.EmployeeBenefits.Select(benefit => new EmployeeBenefitsDto
                 {
@@ -90,9 +87,7 @@ namespace MoviesAPI.Repositories
                     JobTitle = job.JobTitle,
                     Description = job.Description,
                     EmployeeID = job.EmployeeID
-
-
-                    // Map the properties of EmployeeJob to EmployeeJobDto
+                    
                 }).ToList(),
                 Payrolls = employee.Payrolls.Select(payroll => new PayrollDto
                 {
@@ -102,9 +97,6 @@ namespace MoviesAPI.Repositories
                     Bonus = payroll.Bonus,
                     Deductions = payroll.Deductions,
                     PayDate = payroll.PayDate
-
-
-                    // Map the properties of Payroll to PayrollDto
                 }).ToList(),
                 EmployeeBenefits = employee.EmployeeBenefits.Select(benefit => new EmployeeBenefitsDto
                 {
@@ -149,7 +141,6 @@ namespace MoviesAPI.Repositories
                 employee.DateOfBirth = employeeDto.DateOfBirth;
                 employee.Gender = employeeDto.Gender;
                 employee.Age = employeeDto.Age;
-                // Don't update the navigation properties here
 
                 _context.Entry(employee).State = EntityState.Modified;
                 await _context.SaveChangesAsync();

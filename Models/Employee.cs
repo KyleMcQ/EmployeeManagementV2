@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.DTOs;
+﻿using MoviesAPI.DTOs;
 using System.ComponentModel.DataAnnotations;
 namespace MoviesAPI.Models
 {

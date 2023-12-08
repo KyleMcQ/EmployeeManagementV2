@@ -1,10 +1,6 @@
 ﻿using MoviesAPI.Interfaces;
 using MoviesAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MoviesAPI.DTOs;
 
 namespace MoviesAPI.Repositories
@@ -28,7 +24,6 @@ namespace MoviesAPI.Repositories
                 EmployeeID = job.EmployeeID
 
 
-                // Map other properties from EmployeeJob to EmployeeJobDto
             }).ToListAsync();
         }
 
@@ -43,7 +38,6 @@ namespace MoviesAPI.Repositories
                 JobTitle = job.JobTitle,
                 Description = job.Description,
                 EmployeeID = job.EmployeeID
-                // Map other properties from EmployeeJob to EmployeeJobDto
             };
         }
 
@@ -69,7 +63,6 @@ namespace MoviesAPI.Repositories
                 job.JobTitle = employeeJobDto.JobTitle;
                 job.Description = employeeJobDto.Description;
                 job.EmployeeID = employeeJobDto.EmployeeID;
-                // Map other relevant properties from the DTO to the job entity
 
                 _context.Entry(job).State = EntityState.Modified;
                 await _context.SaveChangesAsync();

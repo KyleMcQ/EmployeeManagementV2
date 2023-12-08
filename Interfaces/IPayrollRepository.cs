@@ -1,7 +1,4 @@
 ﻿using MoviesAPI.DTOs;
-using MoviesAPI.Models; // Assuming your models are in this namespace
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MoviesAPI.Interfaces
 {

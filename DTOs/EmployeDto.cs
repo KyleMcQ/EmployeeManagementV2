@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.DTOs;
+﻿using MoviesAPI.DTOs;
 using MoviesAPI.Models;
 
 namespace MoviesAPI.DTOs

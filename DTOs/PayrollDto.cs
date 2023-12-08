@@ -9,7 +9,6 @@
         public decimal? Deductions { get; set; }
         public DateTime PayDate { get; set; }
 
-        // Navigation property to Employee
         
     }
 }

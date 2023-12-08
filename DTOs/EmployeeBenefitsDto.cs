@@ -1,4 +1,4 @@
-﻿namespace EmployeeManagement.DTOs
+﻿namespace MoviesAPI.DTOs
 {
     public class EmployeeBenefitsDto
     {

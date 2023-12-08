@@ -1,5 +1,4 @@
-﻿using MoviesAPI.Models;
-
+﻿
 namespace MoviesAPI.DTOs
 {
     public class EmployeeJobDto

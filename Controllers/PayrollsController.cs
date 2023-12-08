@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MoviesAPI.DTOs;
+﻿using MoviesAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Interfaces; // Import the namespace where IPayrollRepository is located
-using MoviesAPI.Models; // Contains PayrollDto
+using MoviesAPI.Interfaces; 
+
 
 namespace EmployeeManagement.Controllers
 {
